@@ -1,0 +1,99 @@
+<html>
+<head>
+<script src="jquery-1.8.3.min.js"></script>
+</head>
+<body>
+<style>
+li.active {
+	font-weight: bold;
+}
+</style>
+<script>
+	function populateYears(data) {
+		$('#years').empty()
+		for (y in data) {
+			li = $(document.createElement('li'))
+			li.attr("id", "year_"+data[y])
+			li.attr("year",data[y])
+			li.html("<a href='#''>"+data[y]+"</a>")
+			li.on("click", clickyear)
+			k = $('#years').append(li)
+		}
+	}
+	function populateMonths(data) {
+		$('#months').empty()
+		for (m in data) {
+			li = $(document.createElement('li'))
+			li.attr("id", "month"+data[m])
+			li.attr("month",data[m])
+			li.html("<a href='#''>"+data[m]+"</a>")
+			li.on("click", clickmonth)
+			k = $('#months').append(li)
+		}
+	}
+
+	function populateDays(data) {
+		$('#days').empty()
+		for (d in data) {
+			li = $(document.createElement('li'))
+			li.attr("id", "day"+data[d])
+			li.attr("day",data[d])
+			li.html("<a href='#''>"+data[d]+"</a>")
+			li.on("click", clickday)
+			k = $('#days').append(li)
+		}
+	}
+	function populateImages(data) {
+		for(x in data) {
+			console.log(data[x])
+		}
+	}
+	function clickyear(d) {
+		t = $(d.target).parent()
+		console.log(t.parent())
+		if(t) {
+			t.parent().children().each(function(d) {$(this).removeClass("active")})
+			t.addClass("active")
+			year = t.attr("year")
+			$.getJSON("download/json/"+ year + "/months.json", populateMonths)
+		}
+		return false;
+	}
+	function clickmonth(d) {
+		t = $(d.target).parent()
+
+		if(t) {
+			t.parent().children().each(function(d) {$(this).removeClass("active")})
+			t.addClass("active")
+
+			month = t.attr("month")
+			year = $('#years li.active').attr("year")
+			$.getJSON("download/json/"+ year + "/" + month+ "/days.json", populateDays)
+		}
+		return false;
+	}
+
+	function clickday(d) {
+		t = $(d.target).parent()
+		if(t) {
+			year = $('#years li.active').attr("year")
+			month = $('#months li.active').attr("month")
+			day = t.attr("day")
+			console.log(day)
+			$.getJSON("download/json/"+ year + "/" + month+ "/"+day+".json", populateImages)
+		}
+	}
+
+	$.getJSON("download/json/years.json", populateYears)
+
+</script>
+
+<h1> My dayviews</h1>
+Years<ul id="years">
+</ul>
+Months<ul id="months">
+</ul>
+Days<ul id="days">
+</ul>
+</body>
+</html>
