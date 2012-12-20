@@ -73,7 +73,7 @@ class dayviews():
             except:
                 pass
 
-        if days is not None:
+        if days is None:
             uri = "/users/%d/images/dates/%s/%s.json" % (
                 self.userid, year, month)
             days = self.get_json(uri).get("days")
