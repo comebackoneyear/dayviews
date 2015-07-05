@@ -4,6 +4,7 @@ import urllib2
 import json
 import os
 
+from time import sleep
 
 class dayviews():
     API_KEY = "bd2c8c977624f9c7d64bb683ffc2a0a341ecc825"
@@ -34,8 +35,14 @@ class dayviews():
         try:
             req = self.opener.open(url)
         except urllib2.HTTPError as e:
-            print "Request %s failed: %d" % (url, e.code)
-            return {}
+            if e.headers.get("X-RateLimit-Remaining") == "0":
+                wait = e.headers.get("X-RateLimit-Seconds-To-Reset")
+                print "Ratelimit, waiting %s seconds" % wait
+                sleep(int(wait))
+                return self.get_json(url, **kwargs)
+            else:
+                print "Request %s failed: %d" % (url, e.code)
+                return {}
         ret = req.read()
         try:
             return json.loads(ret)
