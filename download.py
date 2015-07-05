@@ -39,7 +39,7 @@ class dayviews():
                 wait = e.headers.get("X-RateLimit-Seconds-To-Reset")
                 print "Ratelimit, waiting %s seconds" % wait
                 sleep(int(wait))
-                return self.get_json(url, **kwargs)
+                return self.get_json(uri, **kwargs)
             else:
                 print "Request %s failed: %d" % (url, e.code)
                 return {}
