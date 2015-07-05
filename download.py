@@ -34,7 +34,7 @@ class dayviews():
         try:
             req = self.opener.open(url)
         except urllib2.HTTPError as e:
-            print "Request failed: %d" % e.code
+            print "Request %s failed: %d" % (url, e.code)
             return {}
         ret = req.read()
         try:
@@ -130,13 +130,17 @@ class dayviews():
             return False
 
     def download_image_file(self, url, wdir, filename):
-        return "/images/%s/%s" % (wdir, filename)
         try:
-            output_filename = "%s/images/%s" % filename
+            suffix = url.split(".")[-1]
+            output_filename = "%s/images/%s/%s.%s" % (self.SAVE_DIR, wdir, filename, suffix)
             f = urllib2.urlopen(url)
             img = f.read()
+            try:
+                os.makedirs("%s/images/%s" % (self.SAVE_DIR, wdir))
+            except OSError as e:
+                pass
             open(output_filename, 'wb').write(img)
-            return "/images/%s" % filename
+            return "/images/%s/%s.%s" % (wdir, filename, suffix)
         except:
             return None
 
