@@ -5,7 +5,7 @@ A Dayviews downloader and  browser
 
 Requirements:
 * Python 2.7
-* screen or other screen multiplexer (Optional)
+* `screen` or other screen multiplexer (Optional)
 
 Usage:
 Edit the download.py to set USERNAME and PASSWORD.
